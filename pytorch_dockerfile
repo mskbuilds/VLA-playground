@@ -1,0 +1,57 @@
+FROM nvcr.io/nvidia/l4t-base:r36.2.0
+
+# ---------- BASIC DEPS ----------
+RUN apt-get update && \
+    apt-get install -y \
+        python3 python3-pip python3-dev \
+        ninja-build \
+        git \
+        cmake \
+        build-essential \
+        libopenblas-dev \
+        libomp-dev \
+        libjpeg-dev \
+        libpng-dev \
+        libfreetype6-dev \
+        libavcodec-dev \
+        libavformat-dev \
+        libswscale-dev \
+        libopenmpi-dev \
+        mpich && \
+    apt-get clean
+
+# ---------- PYTHON DEPS ----------
+RUN pip3 install --upgrade pip setuptools wheel && \
+    pip3 install \
+        ninja \
+        mkl \
+        mkl-include \
+        typing_extensions \
+        requests \
+        dataclasses
+
+# ---------- CLONE PYTORCH ----------
+WORKDIR /workspace
+RUN git clone --recursive https://github.com/pytorch/pytorch.git
+WORKDIR /workspace/pytorch
+
+# Checkout stable version (2.2.0 or 2.3 later)
+RUN git checkout v2.2.0 && git submodule sync && git submodule update --init --recursive
+
+# ---------- ENVIRONMENT FOR JETSON ----------
+ENV USE_CUDA=1
+ENV USE_CUDNN=1
+ENV USE_MKLDNN=0
+ENV USE_NCCL=0            # Jetson does not support NCCL
+ENV USE_DISTRIBUTED=0
+ENV BUILD_TEST=0
+ENV TORCH_CUDA_ARCH_LIST="8.7"   # Jetson Orin
+ENV CUDA_HOME=/usr/local/cuda
+ENV CUDNN_LIBRARY=/usr/lib/aarch64-linux-gnu
+ENV CUDNN_INCLUDE_PATH=/usr/include
+
+# ---------- BUILD ----------
+RUN python3 setup.py bdist_wheel
+
+# Save wheel outside build directory
+RUN mkdir -p /output && cp dist/*.whl /output
