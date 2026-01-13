@@ -5,9 +5,10 @@ RUN apt-get update && \
     apt-get install -y python3 python3-pip python3-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+COPY torch-2.2.0a0+git8ac9b20-cp310-cp310-linux_aarch64.whl /tmp/
 # Install PyTorch wheel for Jetson (with CUDA)
 RUN pip3 install --no-cache-dir \
-    https://nvidia-ai-iot.github.io/pytorch-for-jetson/l4t-36/pytorch-2.1.0-cp310-cp310-linux_aarch64.whl && \
+    /tmp/torch-2.2.0a0+git8ac9b20-cp310-cp310-linux_aarch64.whl && \
     pip3 install --no-cache-dir torchvision transformers
 
     
