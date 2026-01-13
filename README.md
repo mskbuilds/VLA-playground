@@ -31,18 +31,18 @@ To install in system, just use pip
 pip3 install torch-2.2.0-cp310-cp310-linux_aarch64.whl
 ```
 
-##Points to remember
+## Points to remember
 
 These are points to remember especially around the environment variables
 disable NCCL + MKLDNN (Set them to 0)
 Cuda versioin for jetson orin = 8.7
 
 
-##Setup for torch and torchvision
+## Setup for torch and torchvision
 
 To setup torch and torchvision on nvidia jetson orin, the steps followed are slightly different. These
 libraries arent availiable in the standart apt or pip package management since jetpack has a different
 setup. This project runs with jetpack 6, with cuda 12.6. The following are the links for the wheel packages
 
-Torch(2.8.0) : https://pypi.jetson-ai-lab.io/jp6/cu126/torch/2.8.0
-TorchVision(0.23.0): https://pypi.jetson-ai-lab.io/jp6/cu126/torchvision/0.23.0
+Torch(2.8.0) : https://pypi.jetson-ai-lab.io/jp6/cu126/torch/2.8.0 <br />
+TorchVision(0.23.0): https://pypi.jetson-ai-lab.io/jp6/cu126/torchvision/0.23.0 <br />
